@@ -1,6 +1,7 @@
 #Calculate the time taken for 1000 runs of:
 #binarysearch & unordered sample (slower as has to order sample first)
 #binarysearch & ordered sample (fastest)
+#binarysearch & ordered sample using recursion (fastest)
 #list.index() & unordered sample ((un)ordered doesn't matter - linear search)
 #list.index() & ordered sample ((un)ordered doesn't matter - linear search)
 
@@ -94,7 +95,25 @@ def binarysearch_ordered(sample, x):
 			
 	#if function hasn't returned by now search term does not exist
 	return -1	
+
+#ORDERED binarysearch using recursion
+#binarysearch function for an ordered list
+#function returns:
+#index of the search term IF search term exists 
+#otherwise -1 if the search term does not exist	
+def binarysearch_ordered_recursion(sample, x, index_left, index_right):
 	
+	if index_left <= index_right:	
+		mid_index = index_left + (index_right-index_left)//2
+		if sample[mid_index]==x:
+			return mid_index
+		elif sample[mid_index]<x:
+			return binarysearch_ordered_recursion(sample, x, mid_index+1, index_right)
+		else:
+			return binarysearch_ordered_recursion(sample, x, index_left, mid_index-1)
+	else:
+		return -1
+
 	
 #parameters for generating random search sample
 range_min, range_max=0, 10000
@@ -137,6 +156,21 @@ t_end=time.perf_counter()
 t_taken=t_end-t_start
 
 print(f"{num_loops} calls of binarysearch_ordered took {t_taken} seconds")	
+
+
+#*******************************		
+#Test: binarysearch_ordered_recursion
+t_start=time.perf_counter()
+
+for i in range(num_loops):
+	search_term=random.randint(range_min, range_max)
+	binarysearch_ordered_recursion(list_sorted,search_term,0,sample_size-1)
+
+t_end=time.perf_counter()
+
+t_taken=t_end-t_start
+
+print(f"{num_loops} calls of binarysearch_ordered_recursion took {t_taken} seconds")
 
 
 #*******************************
